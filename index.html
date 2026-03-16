@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Calculatrice</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .flex-col {
+        flex-direction: column;
+      }
+
+      .flex-1 {
+        flex: 1 1 0%;
+      }
+
+      .justify-between {
+        justify-content: space-between;
+      }
+
+      .items-stretch {
+        align-items: stretch;
+      }
+
+      .border {
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ddd;
+      }
+
+      .p-2 {
+        padding: 0.5rem;
+      }
+
+      .gap-2 {
+        gap: 0.5rem;
+      }
+
+      .grid {
+        display: grid;
+      }
+
+      .grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .grid-rows-5 {
+        grid-template-rows: repeat(5, minmax(0, 1fr));
+      }
+
+      .col-span-2 {
+        grid-column: span 2 / span 2;
+      }
+
+      .h-full {
+        height: 100%;
+      }
+
+      .w-full {
+        width: 100%;
+      }
+
+      .overflow-hidden {
+        overflow: hidden;
+      }
+
+      .overflow-y-auto {
+        overflow-y: auto;
+      }
+
+      .text-right {
+        text-align: right;
+      }
+
+      .text-sm {
+        font-size: 0.875rem;
+      }
+
+      .text-xs {
+        font-size: 0.75rem;
+      }
+
+      .bg-white {
+        background-color: #ffffff;
+      }
+
+      .cursor-pointer {
+        cursor: pointer;
+      }
+
+      .select-none {
+        user-select: none;
+      }
+
+      .calc-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 1.2fr);
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .display {
+        min-height: 5rem;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+      }
+
+      .display-line {
+        line-height: 1.2;
+      }
+
+      .history-item {
+        border-bottom: 1px solid #eee;
+        padding: 0.25rem 0;
+      }
+
+      .key {
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .key-label {
+        transition: color 0.1s ease;
+      }
+
+      .key-label-active {
+        color: #e02424;
+      }
+
+      .history-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+    </style>
+  </head>
+  <body class="bg-white">
+    <main class="calc-layout h-full">
+      <section class="flex flex-col border p-2 gap-2">
+        <div
+          id="display"
+          class="display border p-2 overflow-y-auto text-right text-sm select-none"
+          aria-label="Saisie en cours"
+        ></div>
+        <div class="grid grid-cols-4 grid-rows-5 gap-2" style="flex: 1 1 0%">
+          <!-- Ligne 1 -->
+          <button class="key cursor-pointer select-none" data-key="C">
+            <span class="key-label">C</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="(">
+            <span class="key-label">(</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key=")">
+            <span class="key-label">)</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="/">
+            <span class="key-label">/</span>
+          </button>
+
+          <!-- Ligne 2 -->
+          <button class="key cursor-pointer select-none" data-key="7">
+            <span class="key-label">7</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="8">
+            <span class="key-label">8</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="9">
+            <span class="key-label">9</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="*">
+            <span class="key-label">*</span>
+          </button>
+
+          <!-- Ligne 3 -->
+          <button class="key cursor-pointer select-none" data-key="4">
+            <span class="key-label">4</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="5">
+            <span class="key-label">5</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="6">
+            <span class="key-label">6</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="-">
+            <span class="key-label">-</span>
+          </button>
+
+          <!-- Ligne 4 -->
+          <button class="key cursor-pointer select-none" data-key="1">
+            <span class="key-label">1</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="2">
+            <span class="key-label">2</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="3">
+            <span class="key-label">3</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="+">
+            <span class="key-label">+</span>
+          </button>
+
+          <!-- Ligne 5 -->
+          <button class="key cursor-pointer select-none col-span-2" data-key="0">
+            <span class="key-label">0</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key=".">
+            <span class="key-label">.</span>
+          </button>
+          <button class="key cursor-pointer select-none" data-key="=">
+            <span class="key-label">=</span>
+          </button>
+        </div>
+      </section>
+      <aside class="border p-2 flex flex-col items-stretch">
+        <div class="history-title select-none">Historique</div>
+        <div
+          id="history"
+          class="flex-1 overflow-y-auto text-xs select-none"
+          aria-label="Historique des calculs"
+        ></div>
+      </aside>
+    </main>
+
+    <script>
+      (function () {
+        const displayEl = document.getElementById("display");
+        const historyEl = document.getElementById("history");
+        const keys = document.querySelectorAll(".key");
+        const STORAGE_KEY = "calc-history";
+
+        let currentExpression = "";
+        let lastKey = null;
+        let activeLabel = null;
+
+        function loadHistory() {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          try {
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+          } catch {
+            return [];
+          }
+        }
+
+        function saveHistory(items) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+        }
+
+        function renderHistory() {
+          const items = loadHistory();
+          historyEl.innerHTML = "";
+          for (let i = items.length - 1; i >= 0; i--) {
+            const item = document.createElement("div");
+            item.className = "history-item";
+            item.textContent = items[i];
+            historyEl.appendChild(item);
+          }
+        }
+
+        function splitExpressionIntoMembers(expr) {
+          const members = [];
+          let i = 0;
+          const len = expr.length;
+          let pendingOp = null;
+
+          while (i < len) {
+            const ch = expr[i];
+
+            if (ch === " ") {
+              i += 1;
+              continue;
+            }
+
+            if (/[0-9.]/.test(ch)) {
+              let num = ch;
+              i += 1;
+              while (i < len && /[0-9.]/.test(expr[i])) {
+                num += expr[i];
+                i += 1;
+              }
+              if (pendingOp) {
+                members.push(pendingOp + " " + num);
+                pendingOp = null;
+              } else {
+                members.push(num);
+              }
+              continue;
+            }
+
+            if ("+-*/".indexOf(ch) !== -1) {
+              pendingOp = ch;
+              i += 1;
+              continue;
+            }
+
+            if (ch === "(" || ch === ")") {
+              if (pendingOp) {
+                members.push(pendingOp + " " + ch);
+                pendingOp = null;
+              } else {
+                members.push(ch);
+              }
+              i += 1;
+              continue;
+            }
+
+            i += 1;
+          }
+
+          if (pendingOp && members.length) {
+            members[members.length - 1] = members[members.length - 1] + " " + pendingOp;
+          }
+
+          return members;
+        }
+
+        function renderDisplay() {
+          displayEl.innerHTML = "";
+          const trimmed = currentExpression.trim();
+          if (!trimmed) return;
+          const members = splitExpressionIntoMembers(trimmed);
+          members.forEach(function (part) {
+            const line = document.createElement("div");
+            line.className = "display-line";
+            line.textContent = part;
+            displayEl.appendChild(line);
+          });
+        }
+
+        function setActiveLabel(labelEl) {
+          if (activeLabel && activeLabel !== labelEl) {
+            activeLabel.classList.remove("key-label-active");
+          }
+          if (labelEl) {
+            labelEl.classList.add("key-label-active");
+            activeLabel = labelEl;
+          }
+        }
+
+        function clearExpression() {
+          currentExpression = "";
+          renderDisplay();
+        }
+
+        function evaluateExpression() {
+          if (!currentExpression.trim()) return;
+          try {
+            // Utiliser Function pour une évaluation simple sans dépendances externes
+            // L'expression n'est construite qu'à partir des touches autorisées.
+            const result = Function("return " + currentExpression)();
+            if (typeof result === "number" && Number.isFinite(result)) {
+              const items = loadHistory();
+              items.push(currentExpression + " = " + result);
+              saveHistory(items);
+              renderHistory();
+              currentExpression = String(result);
+              renderDisplay();
+            }
+          } catch {
+            // En cas d'erreur, on ne fait rien.
+          }
+        }
+
+        function handleKey(value, labelEl) {
+          setActiveLabel(labelEl);
+
+          if (value === "C") {
+            if (lastKey === "C") {
+              saveHistory([]);
+              renderHistory();
+            }
+            clearExpression();
+          } else if (value === "=") {
+            evaluateExpression();
+          } else {
+            currentExpression += value;
+            renderDisplay();
+          }
+
+          lastKey = value;
+        }
+
+        keys.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            const value = btn.getAttribute("data-key");
+            const labelEl = btn.querySelector(".key-label");
+            handleKey(value, labelEl);
+          });
+        });
+
+        renderHistory();
+        renderDisplay();
+      })();
+    </script>
+  </body>
+</html>
+
